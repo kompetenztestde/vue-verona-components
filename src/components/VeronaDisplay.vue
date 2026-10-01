@@ -79,7 +79,7 @@ function handlePlayerMessage(event: Event) {
 }
 
 watch(
-    [player, unitDefinition, playerConfig],
+    [() => player, () => unitDefinition, () => playerConfig],
     async (
         [newPlayer, newUnitDefinition, newPlayerConfig],
         [oldPlayer, oldUnitDefinition, oldPlayerConfig]
