@@ -7,7 +7,7 @@ export default defineConfig({
     plugins: [vue()],
     build: {
         lib: {
-            entry: resolve(import.meta.dirname, 'src/index.html'),
+            entry: resolve(import.meta.dirname, 'src/index.ts'),
             name: 'VueVeronaComponents',
             fileName: 'vue-verona-components',
         },
