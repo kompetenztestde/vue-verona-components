@@ -12,10 +12,11 @@ A Vue 3 component library for hosting [Verona](https://verona-interfaces.github.
 - `npm run build` — `vue-tsc -b` (type check) followed by `vite build` in library mode
 - `npx vue-tsc -b` — type check only
 - `npm run format` — Prettier over `src/` (4 spaces, single quotes, 100 columns)
+- `npm run lint` — ESLint over the whole repo (flat config in `eslint.config.ts`); `npm run lint:fix` applies autofixes. CI (`.github/workflows/lint.yml`) runs it with `--max-warnings 0`
 - `npm run test:e2e` — Playwright e2e tests in `e2e/` against the demo app (Chromium, Firefox). Playwright starts the Vite dev server itself on port 5173, or reuses one that is already running. Single test: `npx playwright test e2e/verona-display.spec.ts --project=chromium`
 - `npm run test:e2e:ui` — the same in Playwright's UI mode
 
-There are no unit tests and no linter. `noUnusedLocals` and `noUnusedParameters` are on, so unused code fails the build. `e2e/` and `playwright.config.ts` are type checked by `vue-tsc -b` through `tsconfig.e2e.json`.
+There are no unit tests. ESLint only covers code quality; formatting rules are switched off in favour of Prettier. `noUnusedLocals` and `noUnusedParameters` are on, so unused code fails the build. `e2e/` and `playwright.config.ts` are type checked by `vue-tsc -b` through `tsconfig.e2e.json`, `vite.config.ts` and `eslint.config.ts` through `tsconfig.node.json`.
 
 ## Architecture
 
