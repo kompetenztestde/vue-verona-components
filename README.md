@@ -1,5 +1,18 @@
-# Vue 3 + TypeScript + Vite
+# vue-verona-components
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+This repository contains a Vue.js component that implements the VERONA specification to host a VERONA player.
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+## Usage
+
+```typescript
+<script setup lang="ts">
+    import { VeronaDisplay } from 'vue-verona-components';
+
+    const player = 'EXAMPLE PLAYER HTML';
+    const unitDefinition = 'EXAMPLE UNIT DEFINITION CONTENT';
+</script>
+
+<template>
+    <VeronaDisplay :player="player" :unit-definition="unitDefinition" />
+</template>
+```
