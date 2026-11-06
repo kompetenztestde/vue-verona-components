@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import type { NavigationTarget, PlayerConfig, RuntimeError, State } from '@/types/verona';
+import type {
+    NavigationTarget,
+    PlayerConfig,
+    RuntimeError,
+    State,
+    UnitState,
+} from '@/types/verona';
 import { ref } from 'vue';
 import VeronaDisplay from './components/VeronaDisplay.vue';
 
@@ -14,11 +20,44 @@ type EmitLogEntry = {
 };
 
 const MAX_LOG_ENTRIES = 100;
+const UNIT_STATE_STORAGE_KEY = 'verona-demo-unit-state';
 
 // the sample player hides its unit navigation buttons unless the targets are enabled
 const playerConfig: PlayerConfig = {
     enabledNavigationTargets: ['first', 'previous', 'next', 'last', 'end'],
 };
+
+// the last unit state reported by the player is kept in the session storage, so a page reload
+// restores it the way a real host would restore a saved state
+const savedUnitState = loadSavedUnitState();
+const hasSavedUnitState = ref(savedUnitState !== undefined);
+
+function loadSavedUnitState(): UnitState | undefined {
+    try {
+        const stored = sessionStorage.getItem(UNIT_STATE_STORAGE_KEY);
+        return stored ? (JSON.parse(stored) as UnitState) : undefined;
+    } catch {
+        return undefined;
+    }
+}
+
+function saveUnitState(unitState: UnitState) {
+    try {
+        sessionStorage.setItem(UNIT_STATE_STORAGE_KEY, JSON.stringify(unitState));
+        hasSavedUnitState.value = true;
+    } catch {
+        // storage unavailable, the state is just not restored after a reload
+    }
+}
+
+function resetSavedUnitState() {
+    try {
+        sessionStorage.removeItem(UNIT_STATE_STORAGE_KEY);
+    } catch {
+        // nothing to remove
+    }
+    location.reload();
+}
 
 const events = ref<EmitLogEntry[]>([]);
 let nextEntryId = 0;
@@ -35,6 +74,9 @@ function logEmit(name: string, payload: unknown) {
 
 function onStateChanged(state: State) {
     logEmit('stateChanged', state);
+    if (state.unitState) {
+        saveUnitState(state.unitState);
+    }
 }
 
 function onNavigationRequested(target: NavigationTarget) {
@@ -60,6 +102,7 @@ function clearLog() {
             :player="veronaPlayer"
             :unit-definition="unitDefinition"
             :player-config="playerConfig"
+            :unit-state="savedUnitState"
             class="verona-host"
             @state-changed="onStateChanged"
             @navigation-requested="onNavigationRequested"
@@ -70,7 +113,17 @@ function clearLog() {
         <section class="emit-log" data-testid="emit-log">
             <header class="emit-log-header">
                 <h2>Emitted events ({{ events.length }})</h2>
-                <button type="button" @click="clearLog">Clear</button>
+                <div class="emit-log-actions">
+                    <button
+                        type="button"
+                        data-testid="reset-unit-state"
+                        :disabled="!hasSavedUnitState"
+                        @click="resetSavedUnitState"
+                    >
+                        Reset saved state
+                    </button>
+                    <button type="button" @click="clearLog">Clear</button>
+                </div>
             </header>
 
             <p v-if="events.length === 0" class="emit-log-empty">No events yet</p>
@@ -128,6 +181,11 @@ function clearLog() {
     justify-content: space-between;
     padding: 8px 12px;
     border-bottom: 1px solid #ccc;
+}
+
+.emit-log-actions {
+    display: flex;
+    gap: 8px;
 }
 
 .emit-log-header h2 {

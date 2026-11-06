@@ -4,6 +4,7 @@ import type {
     PlayerConfig,
     RuntimeError,
     State,
+    UnitState,
     VeronaPlayerReceiveMessage,
     VeronaPlayerSendMessage,
     VopPlayerConfigChangedNotification,
@@ -15,7 +16,7 @@ type Props = {
     player: string;
     unitDefinition: string;
     playerConfig?: PlayerConfig;
-    unitState?: unknown;
+    unitState?: UnitState;
 };
 
 const { player, unitDefinition, unitState, playerConfig = {} } = defineProps<Props>();
@@ -129,7 +130,7 @@ async function sendPlayerStartCommand() {
         sessionId: sessionId.value,
         unitDefinition: unitDefinition,
         playerConfig: playerConfig,
-        ...(unitState ? { unitstate: unitState } : {}),
+        ...(unitState ? { unitState } : {}),
     };
     sendMessageToPlayer(message);
 }
