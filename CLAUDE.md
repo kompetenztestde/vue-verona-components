@@ -4,12 +4,12 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-A Vue 3 component library for hosting [Verona](https://verona-interfaces.github.io/) players (the iframe-based assessment-unit player interface). The README is still the unmodified Vite template and says nothing about the project.
+A Vue 3 component library for hosting [Verona](https://verona-interfaces.github.io/) players (the iframe-based assessment-unit player interface), published to npm as `vue-verona-components`. `README.md` is the consumer-facing documentation (install, CSS import, props, events, limitations); keep it in sync when props, emits or behaviour change.
 
 ## Commands
 
 - `npm run dev` — Vite dev server running the demo app (`index.html` → `src/main.ts` → `src/App.vue`)
-- `npm run build` — `vue-tsc -b` (type check) followed by `vite build` in library mode
+- `npm run build` — `vue-tsc -b` (type check) followed by `vite build` in library mode. Also runs as `prepublishOnly` and in CI (`.github/workflows/build.yml`)
 - `npx vue-tsc -b` — type check only
 - `npm run format` — Prettier over `src/` (4 spaces, single quotes, 100 columns)
 - `npm run lint` — ESLint over the whole repo (flat config in `eslint.config.ts`); `npm run lint:fix` applies autofixes. CI (`.github/workflows/lint.yml`) runs it with `--max-warnings 0`
@@ -22,7 +22,7 @@ There are no unit tests. ESLint only covers code quality; formatting rules are s
 
 The repo has two entry points that share `src/components/`:
 
-- **Library** — `src/index.ts` exports the public components. `vite.config.ts` builds it in lib mode with `vue` externalised. Anything a consumer should be able to import must be re-exported here. That includes the types used in props and emits (from `src/types/verona.ts`). `unplugin-dts` emits declaration files to `dist/` during `vite build`; `package.json` points `types`/`exports` at them.
+- **Library** — `src/index.ts` exports the public components. `vite.config.ts` builds it in lib mode with `vue` externalised (`vue` is a peer dependency, `^3.5.0`). Scoped component styles end up in `dist/vue-verona-components.css`, exported as `vue-verona-components/style.css`; the JS does not import it, so consumers must (documented in the README). Anything a consumer should be able to import must be re-exported here. That includes the types used in props and emits (from `src/types/verona.ts`). `unplugin-dts` emits declaration files to `dist/` during `vite build`; `package.json` points `types`/`exports` at them.
 - **Demo app** — `src/App.vue` is only a dev playground. It imports a sample player and unit from `src/assets/` with `?raw` and passes them to the component as strings. Every emit it receives from the component is shown in an "Emitted events" log panel next to the player. These assets are fixtures, not part of the library.
 
 ### VeronaDisplay and the Verona protocol
