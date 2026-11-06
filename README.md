@@ -2,6 +2,14 @@
 
 This repository contains a Vue.js component that implements the VERONA specification to host a VERONA player.
 
+## Installation
+
+```sh
+npm install vue-verona-components
+```
+
+The package requires Vue 3.5 or later as a peer dependency.
+
 ## Usage
 
 Import the component's stylesheet once, e.g. in your app's entry file (`main.ts`):
@@ -81,6 +89,11 @@ import type { NavigationTarget, PlayerConfig, State, UnitState } from 'vue-veron
 Players usually only send the parts of the state that changed, so merge `unitState.dataParts` from
 successive `state-changed` events if you want to keep the complete state, e.g. to pass it back as
 `unit-state` later.
+
+### Limitations
+
+The widget interface is not supported: `vopWidgetCall` messages from the player are not answered and
+are only logged to the console as errors.
 
 ### Example
 
