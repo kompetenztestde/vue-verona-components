@@ -1,6 +1,23 @@
 {
   "name": "vue-verona-components",
   "version": "0.1.0",
+  "description": "Vue 3 component for hosting Verona players and handling the host side of the Verona player interface",
+  "keywords": [
+    "vue",
+    "vue3",
+    "verona",
+    "verona-player"
+  ],
+  "homepage": "https://github.com/kompetenztestde/vue-verona-components#readme",
+  "bugs": {
+    "url": "https://github.com/kompetenztestde/vue-verona-components/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kompetenztestde/vue-verona-components.git"
+  },
+  "license": "MIT",
+  "author": "kompetenztest.de",
   "type": "module",
   "files": [
     "dist"
