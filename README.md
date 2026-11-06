@@ -4,6 +4,14 @@ This repository contains a Vue.js component that implements the VERONA specifica
 
 ## Usage
 
+Import the component's stylesheet once, e.g. in your app's entry file (`main.ts`):
+
+```typescript
+import 'vue-verona-components/style.css';
+```
+
+Without it, the player's `<iframe>` keeps the browser's default border.
+
 ```typescript
 <script setup lang="ts">
     import { VeronaDisplay } from 'vue-verona-components';
@@ -24,7 +32,8 @@ handles the host side of the Verona `postMessage` protocol. When the player repo
 component starts a new session and sends it the unit definition, the player configuration and, if given,
 a saved unit state.
 
-The iframe has no border and is displayed as a block element. It has no fixed size, so set its width and
+The iframe has no border and is displayed as a block element (both set by `vue-verona-components/style.css`, see
+[Usage](#usage)). It has no fixed size, so set its width and
 height from the parent, e.g. with a class on the component.
 
 ### Props
