@@ -10,7 +10,7 @@ import type {
     VopPlayerConfigChangedNotification,
     VopStartCommand,
 } from '@/types/verona';
-import { onMounted, ref, useTemplateRef, watch, type Ref } from 'vue';
+import { onMounted, onUnmounted, ref, useTemplateRef, watch, type Ref } from 'vue';
 
 type Props = {
     player: string;
@@ -37,9 +37,13 @@ function handlePlayerMessage(event: Event) {
         return;
     }
 
+    // ignore messages from other windows, e.g. the players of other VeronaDisplay instances
+    if (!veronaHost.value || event.source !== veronaHost.value.contentWindow) {
+        return;
+    }
+
     const data: VeronaPlayerSendMessage = event.data;
     switch (data.type) {
-
         case 'vopReadyNotification':
             sendPlayerStartCommand();
             break;
@@ -157,6 +161,10 @@ function sendMessageToPlayer(message: VeronaPlayerReceiveMessage) {
 onMounted(async () => {
     window.addEventListener('message', handlePlayerMessage);
     await loadVeronaPlayer();
+});
+
+onUnmounted(() => {
+    window.removeEventListener('message', handlePlayerMessage);
 });
 </script>
 
