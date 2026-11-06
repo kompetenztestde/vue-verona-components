@@ -1,10 +1,19 @@
 import vue from '@vitejs/plugin-vue';
 import { resolve } from 'path';
 import { defineConfig } from 'vite';
+import dts from 'unplugin-dts/vite';
 
 // https://vite.dev/config/
 export default defineConfig({
-    plugins: [vue()],
+    plugins: [
+        vue(),
+        dts({
+            processor: 'vue',
+            tsconfigPath: './tsconfig.app.json',
+            entryRoot: 'src',
+            include: ['src/index.ts', 'src/components/**', 'src/types/**'],
+        }),
+    ],
     build: {
         lib: {
             entry: resolve(import.meta.dirname, 'src/index.ts'),

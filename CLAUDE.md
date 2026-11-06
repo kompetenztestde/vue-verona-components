@@ -22,7 +22,7 @@ There are no unit tests. ESLint only covers code quality; formatting rules are s
 
 The repo has two entry points that share `src/components/`:
 
-- **Library** — `src/index.ts` exports the public components. `vite.config.ts` builds it in lib mode with `vue` externalised. Anything a consumer should be able to import must be re-exported here.
+- **Library** — `src/index.ts` exports the public components. `vite.config.ts` builds it in lib mode with `vue` externalised. Anything a consumer should be able to import must be re-exported here. That includes the types used in props and emits (from `src/types/verona.ts`). `unplugin-dts` emits declaration files to `dist/` during `vite build`; `package.json` points `types`/`exports` at them.
 - **Demo app** — `src/App.vue` is only a dev playground. It imports a sample player and unit from `src/assets/` with `?raw` and passes them to the component as strings. Every emit it receives from the component is shown in an "Emitted events" log panel next to the player. These assets are fixtures, not part of the library.
 
 ### VeronaDisplay and the Verona protocol
