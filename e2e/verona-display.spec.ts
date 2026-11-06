@@ -71,3 +71,26 @@ test('resetting the saved unit state clears the answers', async ({ page }) => {
     await player.locator('#next-page').click();
     await expect(emailField).toHaveValue('');
 });
+
+test('ignores Verona messages that do not come from its own player', async ({ page }) => {
+    await page.goto('/');
+
+    const player = page.frameLocator('iframe.verona-frame');
+    await expect(player.locator('#sample-unit-badge')).toHaveText('Sample Unit');
+
+    // stands in for another player on the page, e.g. one of a second VeronaDisplay
+    await page.evaluate(() => {
+        window.postMessage(
+            { type: 'vopUnitNavigationRequestedNotification', sessionId: 'foreign', target: 'end' },
+            '*'
+        );
+    });
+
+    // the foreign message is dispatched before the player's, so once that one is logged the
+    // foreign one would have been logged as well
+    await player.locator('#next-unit').click();
+
+    const entries = page.locator('[data-testid="emit-entry"][data-emit="navigationRequested"]');
+    await expect(entries.first()).toContainText('next');
+    await expect(entries).toHaveCount(1);
+});
